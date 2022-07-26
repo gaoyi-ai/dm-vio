@@ -45,6 +45,25 @@ namespace dso
 namespace IOWrap
 {
 
+void KeyFrameDisplay::save(std::ofstream &of) {
+    Sophus::SE3f Swc;
+//    if (originFrame) {
+//        Swc = originFrame->getPoseOpti().inverse().cast<float>();
+//    } else {
+    Swc = camToWorld.cast<float>();
+//    }
+
+    for (int i = 0; i < numSparsePoints; ++i) {
+        if (originalInputSparse[i].idpeth <= 0) continue;
+        float depth = 1.0f / (originalInputSparse[i].idpeth);
+
+        float x = (originalInputSparse[i].u * fxi + cxi) * depth;
+        float y = (originalInputSparse[i].v * fyi + cyi) * depth;
+        float z = depth;
+        Vec3f pw = Swc * Vec3f(x, y, z);
+        of << pw[0] << " " << pw[1] << " " << pw[2] << std::endl;
+    }
+}
 
 KeyFrameDisplay::KeyFrameDisplay()
 {

@@ -330,6 +330,8 @@ void run(ImageFolderReader* reader, IOWrap::PangolinDSOViewer* viewer)
         tmlog.close();
     }
 
+    viewer->saveAsPLYFile(imuSettings.resultsPrefix + "pointcloud.ply");
+
     for(IOWrap::Output3DWrapper* ow : fullSystem->outputWrapper)
     {
         ow->join();

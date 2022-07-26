@@ -93,6 +93,8 @@ public:
     virtual void join() override;
 
     virtual void reset() override;
+
+	void saveAsPLYFile(const std::string &file_name);
 private:
 
 	bool needReset;

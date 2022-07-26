@@ -92,6 +92,16 @@ public:
 	bool active;
 	SE3 camToWorld;
 
+    int numPoints() const {
+        int cnt = 0;
+        for (int i = 0; i < numSparsePoints; ++i) {
+            if (originalInputSparse[i].idpeth > 0) cnt++;
+        }
+        return cnt;
+    }
+
+    void save(std::ofstream &of);
+
     inline bool operator < (const KeyFrameDisplay& other) const
     {
         return (id < other.id);

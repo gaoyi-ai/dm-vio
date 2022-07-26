@@ -23,7 +23,7 @@
 * along with DSO. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+//#include <fstream>
 
 #include "PangolinDSOViewer.h"
 #include "KeyFrameDisplay.h"
@@ -371,6 +371,35 @@ void PangolinDSOViewer::join()
 void PangolinDSOViewer::reset()
 {
 	needReset = true;
+}
+
+/**
+ * @brief 把点云保存成ply文件
+ ***/
+void PangolinDSOViewer::saveAsPLYFile(const std::string &file_name) {
+         std::ofstream fout(file_name);
+        if (!fout) return;
+        boost::unique_lock<boost::mutex> lk3d(model3DMutex);
+
+        // count number of landmarks
+        int cnt_points = 0;
+
+        for (auto kf: keyframes) {
+            cnt_points += kf->numPoints();
+        }
+        // header
+        fout << "ply" << std::endl << "format ascii 1.0" << std::endl
+             << "element vertex " << cnt_points << std::endl
+             << "property float x" << std::endl
+             << "property float y" << std::endl
+             << "property float z" << std::endl
+             << "end_header" << std::endl;
+
+        for (auto kf: keyframes) {
+            kf->save(fout);
+        }
+        fout.close();
+        std::cout << "PLY file is save to " << file_name << std::endl;
 }
 
 void PangolinDSOViewer::reset_internal()
